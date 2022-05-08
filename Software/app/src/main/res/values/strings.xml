@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">WaterPump</string>
+    <string name="read_api_key">9HVTK3NIMR6K2EIL</string>
+    <string name="write_api_key">K0INFPQKLZZC1Z7D</string>
+    <string name="sensor_channel">1706158</string>
+</resources>
