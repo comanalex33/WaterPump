@@ -10,7 +10,7 @@ interface ApiService {
     fun updateData(@Query("api_key") writeApiKey: String,
                    @Query("field1") value: Int) : Call<Int>
 
-    @GET("channels/1706158/fields/1.json")
+    @GET("channels/1706158/feeds.json")
     fun readSensorData(@Query("api_key") readApiKey: String,
                        @Query("results") results: Int): Call<ThingSpeakResponse>
 }

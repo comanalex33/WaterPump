@@ -1,6 +1,7 @@
 package app.quic.waterpump
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -23,6 +24,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var textField: EditText
     private lateinit var textView: TextView
     private lateinit var textView2: TextView
+    private lateinit var textView3: TextView
+    private lateinit var next: Button
 
     val handler = Handler(Looper.getMainLooper())
     val delay: Long = 2000
@@ -35,27 +38,10 @@ class MainActivity : AppCompatActivity() {
         textField = findViewById(R.id.value_field)
         textView = findViewById(R.id.textView)
         textView2 = findViewById(R.id.textView2)
+        textView3 = findViewById(R.id.textView3)
+        next = findViewById(R.id.next)
 
         updateButton.setOnClickListener {
-          /*  val getDataCall: Call<ThingSpeakResponse> = ApiClient.getService().readSensorData(resources.getString(R.string.read_api_key), 1)
-            getDataCall.enqueue(object : Callback<ThingSpeakResponse> {
-                override fun onResponse(
-                    call: Call<ThingSpeakResponse>,
-                    response: Response<ThingSpeakResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        Toast.makeText(applicationContext, response.body()?.feeds!![0].field1, Toast.LENGTH_LONG).show()
-                    } else {
-                        Toast.makeText(applicationContext, response.code().toString(), Toast.LENGTH_LONG).show()
-                    }
-                }
-
-                override fun onFailure(call: Call<ThingSpeakResponse>, t: Throwable) {
-                    Toast.makeText(applicationContext, "Server error", Toast.LENGTH_LONG).show()
-                }
-
-            })*/
-
             if(textField.text.toString() == "") {
                 Toast.makeText(applicationContext, "No value passed", Toast.LENGTH_SHORT).show()
             } else {
@@ -72,11 +58,16 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<Int>, t: Throwable) {
-                        Toast.makeText(applicationContext, "Server error", Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
                     }
 
                 })
             }
+        }
+
+        next.setOnClickListener {
+            val intent = Intent(this, SecondActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -104,13 +95,14 @@ class MainActivity : AppCompatActivity() {
                             textView.text = "Last update: ${outputFormat.format(date)}"
 
                             textView2.text = "${response.body()?.channel!!.field1}: ${response.body()?.feeds!![0].field1}"
+                            textView3.text = "${response.body()?.channel!!.field2}: ${response.body()?.feeds!![0].field2}"
                         } else {
                             Toast.makeText(applicationContext, response.code().toString(), Toast.LENGTH_LONG).show()
                         }
                     }
 
                     override fun onFailure(call: Call<ThingSpeakResponse>, t: Throwable) {
-                        Toast.makeText(applicationContext, "Server error", Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
                     }
 
                 })

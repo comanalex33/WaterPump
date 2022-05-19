@@ -1,6 +1,7 @@
 #include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
 #include <ThingSpeak.h>
+#include <ArduinoJson.h>
 
 char ssid[] = "DIGI-kV92";
 char pass[] = "pmN8N3r5";
@@ -16,6 +17,7 @@ SoftwareSerial nodemcu(D5, D6);
 
 char rdata;
 String sdata;
+String lastCommand = "";
 
 void setup() {
   nodemcu.begin(9600);
@@ -33,24 +35,41 @@ void setup() {
 
 void loop() {
   if(nodemcu.available() > 0) {
-    //rdata = nodemcu.read();
-    //Serial.print("Caracter: ");Serial.println(rdata);
-    //if(rdata == '\n') {
-        //Read value from arduino and post it on server
-        int var = nodemcu.parseInt();
-        ThingSpeak.writeField(writeChannelNumber, 1, var, writeAPIKey);
+     String str = nodemcu.readString();
 
-        //Read command from server and send it to arduino
-        long command = ThingSpeak.readLongField(channelNumber, 1, readAPIKey);
-        int statusCode = ThingSpeak.getLastReadStatus();
-        if(statusCode == 200) {
-          Serial.print("Command: ");
-          Serial.println(command);
-        } else {
-          Serial.print(statusCode);
-          Serial.println(" - Unable to read channel / No internet connection");
-        }
-        nodemcu.print(command);
-    //}
+     StaticJsonDocument<1000> data;
+     auto error = deserializeJson(data, str);
+     if(error) {
+       Serial.print(F("deserializeJson() failed with code "));
+       Serial.println(error.c_str());
+       return;
+     }
+     int intensity = data["intensity"];
+     int moisture = data["moisture"];
+     Serial.print("Intensity: ");
+     Serial.println(intensity);
+     Serial.print("Moisture: ");
+     Serial.println(moisture);
+
+     ThingSpeak.setField(1, intensity);
+     ThingSpeak.setField(2, moisture); 
+     ThingSpeak.writeFields(writeChannelNumber, writeAPIKey);
+
+     //Read command from server and send it to arduino
+     long command = ThingSpeak.readLongField(channelNumber, 1, readAPIKey);
+     String createdAt = ThingSpeak.readCreatedAt(channelNumber, readAPIKey);
+     int statusCode = ThingSpeak.getLastReadStatus();
+     if(statusCode == 200) {
+       Serial.print("Command: ");
+       Serial.println(command);
+     } else {
+       Serial.print(statusCode);
+       Serial.println(" - Unable to read channel / No internet connection");
+     }
+
+     if(createdAt != lastCommand) {
+       lastCommand = createdAt;
+       nodemcu.print(command);
+     }
   }
 }
