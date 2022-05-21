@@ -18,7 +18,7 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
 
     private lateinit var updateButton: Button
     private lateinit var textField: EditText
