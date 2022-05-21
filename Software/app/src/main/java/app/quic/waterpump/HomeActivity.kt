@@ -2,6 +2,8 @@ package app.quic.waterpump
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,6 +12,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import app.quic.waterpump.Utility.NetworkChangeListener
 import app.quic.waterpump.models.ThingSpeakResponse
 import app.quic.waterpump.services.ApiClient
 import retrofit2.Call
@@ -26,7 +29,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var textView2: TextView
     private lateinit var textView3: TextView
     private lateinit var next: Button
-
+    var networkChangeListener = NetworkChangeListener()
     val handler = Handler(Looper.getMainLooper())
     val delay: Long = 2000
 
@@ -109,5 +112,14 @@ class HomeActivity : AppCompatActivity() {
                 handler.postDelayed(this, delay)
             }
         })
+    }
+    override fun onStart() {
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, filter)
+        super.onStart()
+    }
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
     }
 }
