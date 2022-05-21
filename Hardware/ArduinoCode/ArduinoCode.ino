@@ -36,9 +36,7 @@ void loop() {
     Serial.print("Citit: ");
     Serial.println(var);
 
-    if(var > 0) {
-      digitalWrite(pumpPin, HIGH);
-    } else {
+    if(var == 1) {
       digitalWrite(pumpPin, LOW);
       int startTime = millis();
       int endTime = startTime;
