@@ -25,7 +25,6 @@ import java.util.*
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var commandsButton: Button
-    private lateinit var textField: EditText
     private lateinit var updateDateText: TextView
     private lateinit var lightStatusText: TextView
     private lateinit var humidityStatusText: TextView
@@ -45,23 +44,6 @@ class HomeActivity : AppCompatActivity() {
         next = findViewById(R.id.graphics_button)
 
         commandsButton.setOnClickListener {
-                /*val updateCall: Call<Int> = ApiClient.getService().updateData(resources.getString(R.string.write_api_key), 1)
-
-                updateCall.enqueue(object: Callback<Int> {
-                    override fun onResponse(call: Call<Int>, response: Response<Int>) {
-
-                        if(response.isSuccessful) {
-                            Toast.makeText(applicationContext, response.body().toString(), Toast.LENGTH_LONG).show()
-                        } else {
-                            Toast.makeText(applicationContext, response.code().toString(), Toast.LENGTH_LONG).show()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<Int>, t: Throwable) {
-                        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
-                    }
-
-                })*/
             val dialog = CommandsDialog()
             dialog.show(this.supportFragmentManager, "Commands dialog")
         }
