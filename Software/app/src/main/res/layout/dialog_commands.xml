@@ -48,7 +48,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="10dp"
-                android:text="Start pump for only 2 seconds"/>
+                android:text="Start pump for only 2 seconds"
+                android:textColor="@color/grey"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/small_period_button"
@@ -83,7 +84,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="10dp"
-                android:text="Will keep pump running"/>
+                android:text="Will keep pump running"
+                android:textColor="@color/grey"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/continuous_button"
@@ -118,7 +120,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="10dp"
-                android:text="Stop the pump"/>
+                android:text="Stop the pump"
+                android:textColor="@color/grey"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/stop_button"
@@ -153,7 +156,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="10dp"
-                android:text="Start pump only if needed"/>
+                android:text="Start pump only if needed"
+                android:textColor="@color/grey"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/hardware_decisions_button"

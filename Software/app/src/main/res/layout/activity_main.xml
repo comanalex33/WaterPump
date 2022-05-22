@@ -102,6 +102,7 @@
 
         <TextView
             android:id="@+id/update_text"
+            android:textColor="@color/grey"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -121,6 +122,7 @@
             android:layout_height="wrap_content"
             android:padding="15dp"
             android:text="Command"
+            android:textColor="@color/black"
             android:background="@drawable/curve_shape"
             android:backgroundTint="@color/yellow"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -137,6 +139,7 @@
             android:backgroundTint="@color/green"
             android:padding="15dp"
             android:text="Graphics"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/command_button"
             app:layout_constraintHorizontal_bias="0.5"
