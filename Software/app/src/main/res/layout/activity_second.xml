@@ -31,10 +31,23 @@
         app:layout_constraintVertical_bias="0.961" />
 
     <TextView
+        android:id="@+id/element_date"
+        android:layout_width="133dp"
+        android:layout_height="24dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="40dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/grey"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/back_button"
+        tools:layout_editor_absoluteX="160dp" />
+
+    <TextView
         android:id="@+id/textView1"
         android:layout_width="133dp"
         android:layout_height="24dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="40dp"
         android:gravity="center_horizontal"
         android:text="Average humidity:"
@@ -48,7 +61,7 @@
         android:id="@+id/textView2"
         android:layout_width="50dp"
         android:layout_height="24dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/textView1"
         android:textColor="@color/black"
