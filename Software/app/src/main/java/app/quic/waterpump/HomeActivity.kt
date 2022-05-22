@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import app.quic.waterpump.Utility.NetworkChangeListener
+import app.quic.waterpump.dialogs.CommandsDialog
 import app.quic.waterpump.models.ThingSpeakResponse
 import app.quic.waterpump.services.ApiClient
 import retrofit2.Call
@@ -23,7 +24,7 @@ import java.util.*
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var updateButton: Button
+    private lateinit var commandsButton: Button
     private lateinit var textField: EditText
     private lateinit var updateDateText: TextView
     private lateinit var lightStatusText: TextView
@@ -37,14 +38,14 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        updateButton = findViewById(R.id.command_button)
+        commandsButton = findViewById(R.id.command_button)
         updateDateText = findViewById(R.id.update_text)
         lightStatusText = findViewById(R.id.field1_value)
         humidityStatusText = findViewById(R.id.field2_value)
         next = findViewById(R.id.graphics_button)
 
-        updateButton.setOnClickListener {
-                val updateCall: Call<Int> = ApiClient.getService().updateData(resources.getString(R.string.write_api_key), 1)
+        commandsButton.setOnClickListener {
+                /*val updateCall: Call<Int> = ApiClient.getService().updateData(resources.getString(R.string.write_api_key), 1)
 
                 updateCall.enqueue(object: Callback<Int> {
                     override fun onResponse(call: Call<Int>, response: Response<Int>) {
@@ -60,7 +61,9 @@ class HomeActivity : AppCompatActivity() {
                         Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
                     }
 
-                })
+                })*/
+            val dialog = CommandsDialog()
+            dialog.show(this.supportFragmentManager, "Commands dialog")
         }
 
         next.setOnClickListener {
