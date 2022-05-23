@@ -3,6 +3,7 @@
     package="app.quic.waterpump">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WaterPomp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SecondActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -22,6 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false"
+            android:label="Home" />
+        <activity android:name=".SecondActivity" />
     </application>
 
 </manifest>

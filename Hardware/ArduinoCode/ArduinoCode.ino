@@ -10,7 +10,7 @@ SoftwareSerial nodemcu(2,3);
 
 String data;
 
-float value2 = 12.5;
+int background_command = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -36,9 +36,9 @@ void loop() {
     Serial.print("Citit: ");
     Serial.println(var);
 
-    if(var > 0) {
-      digitalWrite(pumpPin, HIGH);
-    } else {
+    // Daca se primeste comanda 1, atunci pornim pompa timp de 2 secunde
+    if(var == 1) {
+      background_command = 0;
       digitalWrite(pumpPin, LOW);
       int startTime = millis();
       int endTime = startTime;
@@ -47,5 +47,36 @@ void loop() {
       }
       digitalWrite(pumpPin, HIGH);
     }
+
+    // Daca se primeste comanda 2, atunci pornim pompa
+    if(var == 2) {
+      background_command = 0;
+      digitalWrite(pumpPin, LOW);
+    }
+
+    // Daca se primeste comanda 3, atunci oprim pompa
+    if(var == 3) {
+      background_command = 0;
+      digitalWrite(pumpPin, HIGH);
+    }
+
+    // Daca se primeste comanda 4, atunci hardware-ul ia decizii singur
+    if(var == 4) {
+      background_command = 4;
+    }
+  }
+
+  // Daca comanda este 4, atunci pornim pompa daca nu este lumina si umiditatea este scazuta
+  if(background_command == 4) {
+    int intensityData = digitalRead(intensityPin);
+    int moistureData = analogRead(moistureSensorPin);
+    Serial.print("Umiditate: ");
+    Serial.println(moistureData);
+    if(intensityData == HIGH && moistureData > 700) {
+      digitalWrite(pumpPin, LOW);
+    } else {
+      digitalWrite(pumpPin, HIGH);
+    }
+    delay(500);
   }
 }

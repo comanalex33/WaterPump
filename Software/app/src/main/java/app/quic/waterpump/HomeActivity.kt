@@ -2,6 +2,8 @@ package app.quic.waterpump
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,6 +12,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import app.quic.waterpump.Utility.NetworkChangeListener
+import app.quic.waterpump.dialogs.CommandsDialog
 import app.quic.waterpump.models.ThingSpeakResponse
 import app.quic.waterpump.services.ApiClient
 import retrofit2.Call
@@ -18,15 +22,14 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
 
-    private lateinit var updateButton: Button
-    private lateinit var textField: EditText
-    private lateinit var textView: TextView
-    private lateinit var textView2: TextView
-    private lateinit var textView3: TextView
+    private lateinit var commandsButton: Button
+    private lateinit var updateDateText: TextView
+    private lateinit var lightStatusText: TextView
+    private lateinit var humidityStatusText: TextView
     private lateinit var next: Button
-
+    var networkChangeListener = NetworkChangeListener()
     val handler = Handler(Looper.getMainLooper())
     val delay: Long = 2000
 
@@ -34,35 +37,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        updateButton = findViewById(R.id.button)
-        textField = findViewById(R.id.value_field)
-        textView = findViewById(R.id.textView)
-        textView2 = findViewById(R.id.textView2)
-        textView3 = findViewById(R.id.textView3)
-        next = findViewById(R.id.next)
+        commandsButton = findViewById(R.id.command_button)
+        updateDateText = findViewById(R.id.update_text)
+        lightStatusText = findViewById(R.id.field1_value)
+        humidityStatusText = findViewById(R.id.field2_value)
+        next = findViewById(R.id.graphics_button)
 
-        updateButton.setOnClickListener {
-            if(textField.text.toString() == "") {
-                Toast.makeText(applicationContext, "No value passed", Toast.LENGTH_SHORT).show()
-            } else {
-                val updateCall: Call<Int> = ApiClient.getService().updateData(resources.getString(R.string.write_api_key), textField.text.toString().toInt())
-
-                updateCall.enqueue(object: Callback<Int> {
-                    override fun onResponse(call: Call<Int>, response: Response<Int>) {
-
-                        if(response.isSuccessful) {
-                            Toast.makeText(applicationContext, response.body().toString(), Toast.LENGTH_LONG).show()
-                        } else {
-                            Toast.makeText(applicationContext, response.code().toString(), Toast.LENGTH_LONG).show()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<Int>, t: Throwable) {
-                        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
-                    }
-
-                })
-            }
+        commandsButton.setOnClickListener {
+            val dialog = CommandsDialog()
+            dialog.show(this.supportFragmentManager, "Commands dialog")
         }
 
         next.setOnClickListener {
@@ -92,10 +75,27 @@ class MainActivity : AppCompatActivity() {
                             calendar.time = date!!
 
                             val outputFormat = SimpleDateFormat("yyyy MMMM dd - HH:mm")
-                            textView.text = "Last update: ${outputFormat.format(date)}"
+                            updateDateText.text = "Last update: ${outputFormat.format(date)}"
 
-                            textView2.text = "${response.body()?.channel!!.field1}: ${response.body()?.feeds!![0].field1}"
-                            textView3.text = "${response.body()?.channel!!.field2}: ${response.body()?.feeds!![0].field2}"
+                            if(response.body()?.feeds!![0].field1 == "1") {
+                                lightStatusText.text = "NO"
+                                lightStatusText.setTextColor(resources.getColor(R.color.red))
+                            } else {
+                                lightStatusText.text = "YES"
+                                lightStatusText.setTextColor(resources.getColor(R.color.green))
+                            }
+
+                            val humidity = response.body()?.feeds!![0].field2.toInt()
+                            if(humidity > 800) {
+                                humidityStatusText.text = "LOW"
+                                humidityStatusText.setTextColor(resources.getColor(R.color.red))
+                            } else if(humidity > 600) {
+                                humidityStatusText.text = "MEDIUM"
+                                humidityStatusText.setTextColor(resources.getColor(R.color.yellow))
+                            } else {
+                                humidityStatusText.text = "PROPERLY"
+                                humidityStatusText.setTextColor(resources.getColor(R.color.green))
+                            }
                         } else {
                             Toast.makeText(applicationContext, response.code().toString(), Toast.LENGTH_LONG).show()
                         }
@@ -109,5 +109,14 @@ class MainActivity : AppCompatActivity() {
                 handler.postDelayed(this, delay)
             }
         })
+    }
+    override fun onStart() {
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, filter)
+        super.onStart()
+    }
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
     }
 }
